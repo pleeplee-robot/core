@@ -1,0 +1,3 @@
+# Requirements
+
+-e git+https://github.com/pleeplee-robot/location.git
