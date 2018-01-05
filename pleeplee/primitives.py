@@ -21,7 +21,7 @@ class ServoState(Enum):
     ServoLeft = 4
 
 def trunServomotor(state):
-    print('Turn servomotor axis into coosen state:')
+    print('Turn servomotor axis into choosen state:')
 
 # Primitive function
 def takeAPicture():
@@ -31,3 +31,22 @@ def takeAPicture():
 
 def analysePicture(path):
     print('Analyse picture')
+
+
+def readPerimeterFromFile(path):
+    print('Read input file for perimeter')
+
+    # Fake datas for now
+
+    corner1 = LED(Color.RED, Point(3.0, 3.0))
+    corner2 = LED(Color.YELLOW, Point(13.0, 5.0))
+    corner3 = LED(Color.BLUE, Point(11.0, 9.0))
+    corner4 = LED(Color.GREEN, Point(1.0, 10.0))
+    perimeter = [corner1, corner2, corner3, corner4]
+    return perimeter
+
+def readAngleNorth():
+    print('Read the angle between the North and the axis of the robot')
+
+    return -45.0
+
