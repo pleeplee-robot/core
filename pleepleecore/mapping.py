@@ -12,6 +12,8 @@ filename='inputs.txt'
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
+# Location integration.
+
 perimeter = primitives.readPerimeterFromFile(filename)
 angleNorth = primitives.readAngleNorth()
 dirInit = (-10.0, -10.0)
