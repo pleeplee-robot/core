@@ -4,16 +4,16 @@ import sys
 
 import primitives
 
-from pleeplee import Location
-
+from pleepleeloc.geometry import Point
+from pleepleeloc.location import Location, Odometry
 
 filename='inputs.txt'
 
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 
-perimeter = readPerimeterFromFile(filename)
-angleNorth = readAngleNorth()
+perimeter = primitives.readPerimeterFromFile(filename)
+angleNorth = primitives.readAngleNorth()
 dirInit = (-10.0, -10.0)
 angleToDirection = -90.0
 height = 0.0

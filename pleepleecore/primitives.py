@@ -2,6 +2,9 @@
 
 from enum import Enum
 
+from pleepleeloc.geometry import Point
+from pleepleeloc.utils import LED, Color, Data
+
 # Primitives of the application that for now just print
 
 # Primitive function to go forward (in cm)
