@@ -28,7 +28,13 @@ This repository holds the core code of the robot, that will send orders
 to components, recieve the result of these orders, use the location API
 and contains the core logic of the robot behavior.
 
-This repository is the only one that is not complete yet. The integration of
-the mapping and the algorithm to avoid obstacle are still missing.
+### Obstacles avoidance
 
+For now, we still have problems making the robot move where we want in an accurate manner. So one of our
+contributor has implemented all the algorithm based on a distbug algorithm to make this possible. We have tested it
+and it works pretty well. The code is in c++ and the simulation has be done with simulink and Aria. You can find bellow screens and results on different maps we have created:
 
+<p align="center">
+<img src="pleepleecore/obstacle/map/res_map1.png" width="400"><img src="pleepleecore/obstacle/map/res_map4.png" width="400">
+
+</p>
