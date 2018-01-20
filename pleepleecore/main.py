@@ -10,11 +10,13 @@ import cv2
 import json
 import MPU9250
 
+# GPIO setup
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(25, GPIO.OUT)
 servo=GPIO.PWM(17, 100)
 
+# Connect to the server and take possession of the motors.
 c = client.create_client("test")
 c.conn()
 import time
@@ -26,7 +28,9 @@ c.send("take/9999999/odometry:1\n")
 i = [0, 0, 0, 0]
 last_time = time.time()
 
-def p():
+def update_pos():
+    """Get odometry data and store the result in i.
+    """
     global i
     while True:
         msg = c.recv(10000)
@@ -74,10 +78,12 @@ def distance():
     return distance
 
 import threading
-a = threading.Thread(target=p)
+a = threading.Thread(target=update_pos)
 a.start()
 
 def get_angle():
+    """Get 400 readings from the MPU9250
+    """
     angles = []
     xs = []
     ys = []
@@ -119,6 +125,7 @@ def move(dist, to_left=1, to_right=1):
     cu_r = 0
     distance_obj_cm = 3000
     while distance_obj_cm > 55 and (left < end_left or right < end_right):
+        # Stop if finished or an obstacle is nearby.
         old_sl = sl
         old_sr = sr
         cur_left, cur_right = get_pos(i)
@@ -126,6 +133,7 @@ def move(dist, to_left=1, to_right=1):
         dr = cur_right - last_right
         cu_l += dl
         cu_r += dr
+        # Compute ratio used to choose the new speeds.
         ratio = (cu_l + 0.1) / (cu_r + 0.1)
         ratio2 = (cu_r + 0.1) / (cu_l + 0.1)
         cur_ratio = (dl + 0.1) / (dr + 0.1)
@@ -148,6 +156,7 @@ def move(dist, to_left=1, to_right=1):
             sl = 170
         if sr > 170:
             sr = 170
+                # Send data to the arduino.
         c.sendtoserial("motor1", int(sr) * to_left)
         c.sendtoserial("motor2", int(sl) * to_right)
         c.sendtoserial("motor3", int(sl) * to_right)
@@ -168,6 +177,8 @@ def move(dist, to_left=1, to_right=1):
 
 
 def move_centimeter(cm):
+    """Move n centimeters, recalibrating every meter.
+    """
     global init_angle, pos, tunny_right
     unit_per_cm = 290 / 71 / 2 / 1.44
     ret = []
@@ -195,6 +206,8 @@ def move_centimeter(cm):
     print(ret[1] / unit_per_cm)
 
 def iset_servo_angle(angle_idx):
+    """Set the servomotor angle to -90, -45, 0, 45 or 90 degrees.
+    """
     vals = [5, 9, 13, 17, 21]
     servo.start(vals[angle_idx])
     time.sleep(1.5)
@@ -204,6 +217,8 @@ def iset_servo_angle(angle_idx):
 mpu=MPU9250.MPU9250()
 
 def get_angle_diff(angle1, angle2):
+    """Return the angle, between 0 and 2*pi, between angle1 and angle2.
+    """
     diff = angle2 - angle1
     while diff < -3.1415:
         diff += 3.1415*2
@@ -212,6 +227,8 @@ def get_angle_diff(angle1, angle2):
     return abs(diff), diff
 
 def turn(rad, first=True):
+    """Turn until reaching rad angles difference from the current direction.
+    """
     global init_angle
     target_angle = init_angle + rad
     while target_angle > 3.1415:
